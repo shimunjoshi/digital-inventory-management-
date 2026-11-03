@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartStock | Inventory Management</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark">S</span><span>SmartStock<small>INVENTORY MANAGER</small></span></div>
+    <nav>
+      <button class="nav-link active" data-view="dashboard"><span>▦</span> Dashboard</button>
+      <button class="nav-link" data-view="inventory"><span>▤</span> Inventory</button>
+      <button class="nav-link" data-view="sales"><span>↗</span> Sales</button>
+    </nav>
+    <div class="sidebar-note"><strong>Stay in control.</strong><p>Keep your shop organized with a clear view of every item.</p></div>
+    <div class="sidebar-footer">SMARTSTOCK · DEMO</div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div><p class="eyebrow">SMALL BUSINESS TOOLKIT</p><h1 id="page-title">Dashboard</h1></div>
+      <div class="top-actions"><span class="today" id="today"></span><span class="avatar">SS</span></div>
+    </header>
+
+    <section id="dashboard-view" class="view">
+      <div class="welcome-row"><div><h2>Good business starts with good stock.</h2><p>Here’s what’s happening in your shop today.</p></div><button class="primary" id="quick-add">＋ Add product</button></div>
+      <div class="stats-grid">
+        <article class="stat-card"><div class="stat-label">Total products <span class="stat-icon purple">▤</span></div><div class="stat-value" id="stat-products">0</div><div class="stat-foot">Unique items in inventory</div></article>
+        <article class="stat-card"><div class="stat-label">Units in stock <span class="stat-icon blue">▦</span></div><div class="stat-value" id="stat-units">0</div><div class="stat-foot">Total available quantity</div></article>
+        <article class="stat-card"><div class="stat-label">Inventory value <span class="stat-icon green">₹</span></div><div class="stat-value" id="stat-value">₹0</div><div class="stat-foot">Based on current selling price</div></article>
+        <article class="stat-card"><div class="stat-label">Low stock alerts <span class="stat-icon orange">!</span></div><div class="stat-value" id="stat-low">0</div><div class="stat-foot">Items at or below reorder level</div></article>
+      </div>
+      <div class="content-grid">
+        <section class="panel"><div class="panel-heading"><div><h3>Low stock alerts</h3><p>Products that may need restocking</p></div><button class="text-button" data-go="inventory">View inventory →</button></div><div id="low-stock-list" class="alert-list"></div></section>
+        <section class="panel"><div class="panel-heading"><div><h3>Recent sales</h3><p>Your latest recorded transactions</p></div><button class="text-button" data-go="sales">View sales →</button></div><div id="recent-sales"></div></section>
+      </div>
+      <section class="panel category-panel"><div class="panel-heading"><div><h3>Inventory by category</h3><p>How your products are distributed</p></div></div><div id="category-list" class="category-list"></div></section>
+    </section>
+
+    <section id="inventory-view" class="view hidden">
+      <div class="section-toolbar"><div><h2>Your products</h2><p>Add, update and keep track of every item.</p></div><button class="primary" id="add-product">＋ Add product</button></div>
+      <div class="panel table-panel"><div class="table-tools"><input id="search" type="search" placeholder="Search product or category…"><select id="category-filter"><option value="">All categories</option></select></div><div class="table-wrap"><table><thead><tr><th>PRODUCT</th><th>CATEGORY</th><th>PRICE</th><th>QUANTITY</th><th>STOCK STATUS</th><th>ACTIONS</th></tr></thead><tbody id="product-rows"></tbody></table></div><div class="empty-state hidden" id="empty-products">No products found. Add your first product to get started.</div></div>
+    </section>
+
+    <section id="sales-view" class="view hidden">
+      <div class="section-toolbar"><div><h2>Sales history</h2><p>Track sales and the stock deducted from inventory.</p></div><button class="primary" id="record-sale">＋ Record sale</button></div>
+      <div class="stats-grid sales-stats"><article class="stat-card"><div class="stat-label">Total sales</div><div class="stat-value" id="sales-count">0</div><div class="stat-foot">Transactions recorded</div></article><article class="stat-card"><div class="stat-label">Sales revenue</div><div class="stat-value" id="sales-revenue">₹0</div><div class="stat-foot">Total recorded revenue</div></article></div>
+      <section class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>DATE & TIME</th><th>PRODUCT</th><th>QUANTITY</th><th>UNIT PRICE</th><th>TOTAL</th></tr></thead><tbody id="sales-rows"></tbody></table></div><div class="empty-state hidden" id="empty-sales">No sales yet. Record a sale to see it here.</div></section>
+    </section>
+    <footer class="main-footer">SmartStock · Simple inventory management for growing shops</footer>
+  </main>
+
+  <div class="modal-backdrop hidden" id="product-modal">
+    <form class="modal" id="product-form">
+      <div class="modal-heading"><div><p class="eyebrow">INVENTORY ITEM</p><h2 id="product-modal-title">Add product</h2></div><button type="button" class="close-button" data-close="product-modal">×</button></div>
+      <input type="hidden" id="product-id">
+      <label>Product name<input id="product-name" required maxlength="60" placeholder="e.g. Notebook"></label>
+      <div class="form-row"><label>Category<input id="product-category" required maxlength="40" placeholder="e.g. Stationery"></label><label>Price (₹)<input id="product-price" type="number" min="0.01" step="0.01" required placeholder="120"></label></div>
+      <div class="form-row"><label>Quantity<input id="product-quantity" type="number" min="0" step="1" required placeholder="25"></label><label>Low-stock level<input id="product-threshold" type="number" min="0" step="1" required value="5"></label></div>
+      <div class="modal-actions"><button type="button" class="secondary" data-close="product-modal">Cancel</button><button class="primary" type="submit">Save product</button></div>
+    </form>
+  </div>
+
+  <div class="modal-backdrop hidden" id="sale-modal">
+    <form class="modal" id="sale-form">
+      <div class="modal-heading"><div><p class="eyebrow">NEW TRANSACTION</p><h2>Record a sale</h2></div><button type="button" class="close-button" data-close="sale-modal">×</button></div>
+      <label>Select product<select id="sale-product" required></select></label>
+      <label>Quantity sold<input id="sale-quantity" type="number" min="1" step="1" required value="1"></label>
+      <p class="form-hint" id="sale-stock-hint">Available stock will appear here.</p>
+      <div class="modal-actions"><button type="button" class="secondary" data-close="sale-modal">Cancel</button><button class="primary" type="submit">Confirm sale</button></div>
+    </form>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="script.js"></script>
+</body>
+</html>
